@@ -30,7 +30,7 @@ LABEL name="DouK-Downloader" authors="JoeanAmier" repository="https://github.com
 # 从构建器阶段，将已经安装好的依赖包复制到最终镜像的系统路径中
 COPY --from=builder /install /usr/local
 
-# 安装 expect（用于自动化交互）和其他可能需要的小工具
+# 安装 expect（用于自动化交互）和 CA 证书
 RUN apt-get update && apt-get install -y --no-install-recommends \
     expect \
     ca-certificates \
