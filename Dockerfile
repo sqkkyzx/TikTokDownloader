@@ -30,12 +30,22 @@ LABEL name="DouK-Downloader" authors="JoeanAmier" repository="https://github.com
 # 从构建器阶段，将已经安装好的依赖包复制到最终镜像的系统路径中
 COPY --from=builder /install /usr/local
 
+# 安装 expect（用于自动化交互）和其他可能需要的小工具
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    expect \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 # 复制你的应用程序代码和相关文件
 COPY src /app/src
 COPY locale /app/locale
 COPY static /app/static
 COPY license /app/license
 COPY main.py /app/main.py
+
+# 复制 entrypoint 脚本
+COPY entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 # 暴露端口
 EXPOSE 5555
@@ -44,4 +54,5 @@ EXPOSE 5555
 VOLUME /app/Volume
 
 # 设置容器启动命令
-CMD ["python", "main.py"]
+ENTRYPOINT ["/app/entrypoint.sh"]
+CMD [""]
